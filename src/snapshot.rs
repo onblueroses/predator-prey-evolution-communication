@@ -5,7 +5,7 @@ use crate::world::entity::Direction;
 use crate::world::terrain::Terrain;
 
 /// Read-only snapshot of the world state for rendering and analysis.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct WorldSnapshot {
     pub tick: u64,
     pub generation: u32,
@@ -18,7 +18,7 @@ pub struct WorldSnapshot {
     pub signals: Vec<SignalSnapshot>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct AgentSnapshot {
     pub id: u32,
     pub x: u32,
@@ -32,7 +32,7 @@ pub struct AgentSnapshot {
     pub lineage: u32,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct PredatorSnapshot {
     pub id: u32,
     pub kind: PredatorKind,
@@ -41,7 +41,7 @@ pub struct PredatorSnapshot {
     pub state: PredatorState,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct SignalSnapshot {
     pub x: u32,
     pub y: u32,

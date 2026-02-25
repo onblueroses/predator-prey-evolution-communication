@@ -4,7 +4,7 @@ use std::collections::HashMap;
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct InnovationNumber(pub u64);
 
-pub struct InnovationCounter {
+pub(crate) struct InnovationCounter {
     next_innovation: InnovationNumber,
     generation_innovations: HashMap<(NodeId, NodeId), InnovationNumber>,
     next_node_id: NodeId,
@@ -12,7 +12,7 @@ pub struct InnovationCounter {
 }
 
 impl InnovationCounter {
-    pub fn new(initial_innovation: u64, initial_node_id: u32) -> Self {
+    pub(crate) fn new(initial_innovation: u64, initial_node_id: u32) -> Self {
         Self {
             next_innovation: InnovationNumber(initial_innovation),
             generation_innovations: HashMap::new(),
@@ -21,7 +21,11 @@ impl InnovationCounter {
         }
     }
 
-    pub fn get_connection_innovation(&mut self, from: NodeId, to: NodeId) -> InnovationNumber {
+    pub(crate) fn get_connection_innovation(
+        &mut self,
+        from: NodeId,
+        to: NodeId,
+    ) -> InnovationNumber {
         if let Some(&inn) = self.generation_innovations.get(&(from, to)) {
             inn
         } else {
@@ -32,7 +36,7 @@ impl InnovationCounter {
         }
     }
 
-    pub fn get_node_for_split(&mut self, split_connection: InnovationNumber) -> NodeId {
+    pub(crate) fn get_node_for_split(&mut self, split_connection: InnovationNumber) -> NodeId {
         if let Some(&node) = self.generation_node_splits.get(&split_connection) {
             node
         } else {
@@ -43,15 +47,15 @@ impl InnovationCounter {
         }
     }
 
-    pub fn next_node_id(&self) -> NodeId {
+    pub(crate) fn next_node_id(&self) -> NodeId {
         self.next_node_id
     }
 
-    pub fn next_innovation(&self) -> InnovationNumber {
+    pub(crate) fn next_innovation(&self) -> InnovationNumber {
         self.next_innovation
     }
 
-    pub fn reset_generation(&mut self) {
+    pub(crate) fn reset_generation(&mut self) {
         self.generation_innovations.clear();
         self.generation_node_splits.clear();
     }

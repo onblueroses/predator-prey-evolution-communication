@@ -1,6 +1,7 @@
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 
+#[derive(Debug)]
 pub struct SeededRng {
     inner: ChaCha8Rng,
     seed: u64,

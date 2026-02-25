@@ -1,4 +1,4 @@
-use crate::brain::activation::{apply_activation, ActivationFn};
+use crate::brain::activation::{ActivationFn, apply_activation};
 use crate::brain::genome::{NeatGenome, NodeKind};
 use std::ops::Range;
 
@@ -14,7 +14,7 @@ struct NetworkEdge {
     weight: f32,
 }
 
-pub struct NeatNetwork {
+pub(crate) struct NeatNetwork {
     nodes: Vec<NetworkNode>,
     edges: Vec<NetworkEdge>,
     input_count: usize,
@@ -23,11 +23,19 @@ pub struct NeatNetwork {
 
 impl NeatNetwork {
     /// Build a feedforward network from a genome via topological sort.
-    pub fn from_genome(genome: &NeatGenome) -> Self {
+    pub(crate) fn from_genome(genome: &NeatGenome) -> Self {
         use std::collections::{HashMap, VecDeque};
 
-        let input_count = genome.nodes.iter().filter(|n| n.kind == NodeKind::Input).count();
-        let output_count = genome.nodes.iter().filter(|n| n.kind == NodeKind::Output).count();
+        let input_count = genome
+            .nodes
+            .iter()
+            .filter(|n| n.kind == NodeKind::Input)
+            .count();
+        let output_count = genome
+            .nodes
+            .iter()
+            .filter(|n| n.kind == NodeKind::Output)
+            .count();
 
         // Build adjacency list from enabled connections
         let mut in_edges: HashMap<u32, Vec<(u32, f32)>> = HashMap::new();
@@ -44,8 +52,14 @@ impl NeatNetwork {
             if !conn.enabled {
                 continue;
             }
-            in_edges.entry(conn.to.0).or_default().push((conn.from.0, conn.weight));
-            out_neighbors.entry(conn.from.0).or_default().push(conn.to.0);
+            in_edges
+                .entry(conn.to.0)
+                .or_default()
+                .push((conn.from.0, conn.weight));
+            out_neighbors
+                .entry(conn.from.0)
+                .or_default()
+                .push(conn.to.0);
             *in_degree.entry(conn.to.0).or_insert(0) += 1;
         }
 
@@ -60,7 +74,8 @@ impl NeatNetwork {
         let mut sorted_ids: Vec<u32> = Vec::new();
         while let Some(node_id) = queue.pop_front() {
             sorted_ids.push(node_id);
-            for &neighbor in out_neighbors.get(&node_id).unwrap_or(&Vec::new()) {
+            let empty = Vec::new();
+            for &neighbor in out_neighbors.get(&node_id).unwrap_or(&empty) {
                 if let Some(deg) = in_degree.get_mut(&neighbor) {
                     *deg -= 1;
                     if *deg == 0 {
@@ -71,11 +86,8 @@ impl NeatNetwork {
         }
 
         // Any nodes not in sorted_ids are part of cycles - skip them (feedforward only)
-        let node_map: HashMap<u32, &crate::brain::genome::NodeGene> = genome
-            .nodes
-            .iter()
-            .map(|n| (n.id.0, n))
-            .collect();
+        let node_map: HashMap<u32, &crate::brain::genome::NodeGene> =
+            genome.nodes.iter().map(|n| (n.id.0, n)).collect();
 
         // Build index map: node_id -> position in sorted order
         let mut id_to_index: HashMap<u32, usize> = HashMap::new();
@@ -120,7 +132,7 @@ impl NeatNetwork {
     }
 
     /// Feed inputs through the network, return output values.
-    pub fn activate(&mut self, inputs: &[f32]) -> Vec<f32> {
+    pub(crate) fn activate(&mut self, inputs: &[f32]) -> Vec<f32> {
         // Set input node values
         for (i, &val) in inputs.iter().enumerate().take(self.input_count) {
             self.nodes[i].value = val;
@@ -142,9 +154,6 @@ impl NeatNetwork {
 
         // Read output values (last output_count nodes in sorted order)
         let output_start = self.nodes.len() - self.output_count;
-        self.nodes[output_start..]
-            .iter()
-            .map(|n| n.value)
-            .collect()
+        self.nodes[output_start..].iter().map(|n| n.value).collect()
     }
 }

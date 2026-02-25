@@ -30,6 +30,7 @@ struct Cli {
     checkpoint: Option<PathBuf>,
 }
 
+#[expect(clippy::print_stderr)]
 fn main() {
     if let Err(e) = run() {
         eprintln!("Error: {e}");
@@ -37,6 +38,8 @@ fn main() {
     }
 }
 
+#[expect(clippy::print_stdout)]
+#[expect(clippy::unnecessary_wraps)]
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let _cli = Cli::parse();
     println!("predator-prey-evolution-communication v0.1.0");

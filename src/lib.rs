@@ -1,13 +1,15 @@
+#![expect(dead_code, reason = "most modules are stubs; remove when wired up")]
+
 pub mod config;
 pub mod rng;
 
-pub mod world;
 pub mod agent;
 pub mod brain;
-pub mod signal;
 pub mod evolution;
-pub mod stats;
+pub mod signal;
 pub mod snapshot;
+pub mod stats;
+pub mod world;
 
 #[cfg(feature = "terminal-viz")]
 pub mod viz;
