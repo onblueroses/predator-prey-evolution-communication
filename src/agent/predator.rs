@@ -1,4 +1,4 @@
-use crate::world::entity::{PredatorId, Position, PreyId};
+use crate::world::entity::{Position, PredatorId, PreyId};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum PredatorKind {
@@ -15,12 +15,12 @@ pub enum PredatorState {
     Resting,
 }
 
-pub struct Predator {
-    pub id: PredatorId,
-    pub kind: PredatorKind,
-    pub pos: Position,
-    pub energy: f32,
-    pub state: PredatorState,
-    pub target: Option<PreyId>,
-    pub cooldown: u32,
+pub(crate) struct Predator {
+    pub(crate) id: PredatorId,
+    pub(crate) kind: PredatorKind,
+    pub(crate) pos: Position,
+    pub(crate) energy: f32,
+    pub(crate) state: PredatorState,
+    pub(crate) target: Option<PreyId>,
+    pub(crate) cooldown: u32,
 }

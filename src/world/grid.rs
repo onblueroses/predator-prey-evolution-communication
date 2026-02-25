@@ -5,21 +5,21 @@ use crate::signal::message::ActiveSignal;
 use crate::world::food::Food;
 use crate::world::terrain::Terrain;
 
-pub struct World {
-    pub width: u32,
-    pub height: u32,
-    pub terrain: Vec<Terrain>,
-    pub food: Vec<Option<Food>>,
-    pub prey: Vec<Prey>,
-    pub predators: Vec<Predator>,
-    pub signals: Vec<ActiveSignal>,
-    pub tick: u64,
-    pub generation: u32,
-    pub rng: SeededRng,
+pub(crate) struct World {
+    pub(crate) width: u32,
+    pub(crate) height: u32,
+    pub(crate) terrain: Vec<Terrain>,
+    pub(crate) food: Vec<Option<Food>>,
+    pub(crate) prey: Vec<Prey>,
+    pub(crate) predators: Vec<Predator>,
+    pub(crate) signals: Vec<ActiveSignal>,
+    pub(crate) tick: u64,
+    pub(crate) generation: u32,
+    pub(crate) rng: SeededRng,
 }
 
 impl World {
-    pub fn new(width: u32, height: u32, seed: u64) -> Self {
+    pub(crate) fn new(width: u32, height: u32, seed: u64) -> Self {
         let size = (width * height) as usize;
         Self {
             width,
@@ -35,15 +35,15 @@ impl World {
         }
     }
 
-    pub fn idx(&self, x: u32, y: u32) -> usize {
+    pub(crate) fn idx(&self, x: u32, y: u32) -> usize {
         (y * self.width + x) as usize
     }
 
-    pub fn terrain_at(&self, x: u32, y: u32) -> Terrain {
+    pub(crate) fn terrain_at(&self, x: u32, y: u32) -> Terrain {
         self.terrain[self.idx(x, y)]
     }
 
-    pub fn in_bounds(&self, x: i32, y: i32) -> bool {
+    pub(crate) fn in_bounds(&self, x: i32, y: i32) -> bool {
         x >= 0 && y >= 0 && (x as u32) < self.width && (y as u32) < self.height
     }
 }

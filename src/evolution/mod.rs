@@ -1,6 +1,6 @@
-pub mod population;
-pub mod species;
 pub mod fitness;
-pub mod selection;
-pub mod reproduction;
 pub mod kin;
+pub mod population;
+pub mod reproduction;
+pub mod selection;
+pub mod species;

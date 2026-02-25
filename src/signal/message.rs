@@ -3,6 +3,7 @@ use crate::world::entity::{Position, PreyId};
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Symbol(pub u8);
 
+#[derive(Debug)]
 pub struct ActiveSignal {
     pub origin: Position,
     pub sender_id: PreyId,

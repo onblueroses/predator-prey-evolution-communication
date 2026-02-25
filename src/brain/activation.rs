@@ -5,7 +5,7 @@ pub enum ActivationFn {
     Relu,
 }
 
-pub fn apply_activation(func: ActivationFn, x: f32) -> f32 {
+pub(crate) fn apply_activation(func: ActivationFn, x: f32) -> f32 {
     match func {
         ActivationFn::Sigmoid => 1.0 / (1.0 + (-x).exp()),
         ActivationFn::Tanh => x.tanh(),
