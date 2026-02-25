@@ -5,16 +5,28 @@ Evolutionary simulation where prey evolve emergent communication via NEAT neuroe
 ## Commands
 
 ```bash
-cargo ca          # check --all-targets (fast compile check)
-cargo lint        # clippy --all-targets -- -D warnings
-cargo ta          # nextest run (parallel test runner)
-cargo fmt         # format all code
-cargo doc --no-deps  # build docs, catch missing doc links
-cargo machete     # find unused dependencies
-cargo deny check  # license + advisory + supply chain audit
-cargo audit       # RustSec vulnerability scan
-cargo expand      # print macro expansions (on-demand debugging)
+# Core workflow (used constantly)
+cargo ca              # check --all-targets (fast compile check)
+cargo lint            # clippy --all-targets -- -D warnings
+cargo ta              # nextest run (parallel test runner)
+cargo fmt             # format all code
+
+# Verification (used in /lint pipeline)
+cargo machete         # find unused dependencies
+cargo deny check      # license + advisory + supply chain audit
+cargo doc --no-deps   # build docs, catch missing doc links
+
+# On-demand diagnostics
+cargo audit           # RustSec vulnerability scan
+cargo expand          # print macro expansions (debugging derives)
+cargo outdated        # show outdated dependencies
+cargo bloat --release # binary size analysis by function/crate
+cargo semver-checks   # check semver compliance (library crates)
+cargo flamegraph      # CPU profiling (generates flamegraph.svg)
+cargo +nightly miri test  # undefined behavior detection (unsafe code)
 ```
+
+Toolchains: `stable-x86_64-pc-windows-msvc` (default), `stable-x86_64-pc-windows-gnu` (CodeLLDB debugging), `nightly-x86_64-pc-windows-msvc` (miri).
 
 ## Architecture
 
