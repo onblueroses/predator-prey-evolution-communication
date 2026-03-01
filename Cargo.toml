@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 description = "Evolutionary simulation where prey agents evolve emergent communication through NEAT neuroevolution"
 license = "MIT"
-repository = "https://github.com/xayha-bx/predator-prey-evolution-communication"
+repository = "https://github.com/onblueroses/predator-prey-evolution-communication"
 keywords = ["evolution", "neat", "emergent-communication", "simulation", "artificial-life"]
 categories = ["simulation", "science"]
 
